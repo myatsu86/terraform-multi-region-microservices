@@ -1,0 +1,18 @@
+# Terraform working files
+.terraform/
+terraform.tfstate
+terraform.tfstate.*
+crash.log
+crash.*.log
+*.tfplan
+
+# Secrets — state and the generated key contain the SSH private key
+*.pem
+
+# Local binaries (the bastion downloads its own copy from GitHub)
+fake-service
+fake_service*
+bin/
+
+# macOS
+.DS_Store
