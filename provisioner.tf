@@ -18,6 +18,8 @@ resource "null_resource" "setup_account" {
     user        = "ubuntu"
     private_key = tls_private_key.this.private_key_openssh
     host        = module.ec2_customer_profile.public_ip
+    host_key            = null  # disables strict host checking
+    timeout             = "5m"
   }
 
   provisioner "file" {
@@ -56,6 +58,8 @@ resource "null_resource" "setup_statement" {
     user        = "ubuntu"
     private_key = tls_private_key.this.private_key_openssh
     host        = module.ec2_customer_profile.public_ip
+    host_key            = null  # disables strict host checking
+    timeout             = "5m"
   }
 
   provisioner "file" {
