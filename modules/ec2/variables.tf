@@ -10,8 +10,8 @@ variable "instance_type" {
   type = string
 }
 
-variable "subnet_id" {
-  type = string
+variable "subnet_ids" {
+  type = list(string)
 }
 
 variable "vpc_id" {
@@ -38,3 +38,28 @@ variable "service_port" {
 variable "region" {
   type = string
 }
+
+variable "min_size" {
+  type    = number
+  default = 3
+}
+
+variable "max_size" {
+  type    = number
+  default = 5
+}
+
+variable "desired_capacity" {
+  type    = number
+  default = 3
+}
+
+variable "target_group_arns" {
+  type    = list(string)
+  default = []
+}
+
+variable "iam_instance_profile_arn" {
+  type = string
+}
+

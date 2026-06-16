@@ -11,11 +11,11 @@ variable "vpc_cidr" {
 }
 
 variable "subnet_cidr" {
-  type = string
+  type = list(string)
 }
 
 variable "availability_zone" {
-  type = string
+  type = list(string)
 }
 
 variable "enable_igw" {

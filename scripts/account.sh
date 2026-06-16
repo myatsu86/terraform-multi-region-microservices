@@ -4,10 +4,13 @@ set -x
 
 echo "Starting account service setup"
 
-UPSTREAM_PORT="9093"
+UPSTREAM_PORT="80"
 
 # No apt install here: this subnet has no internet route, apt would stall cloud-init.
 # Binary is deployed via Terraform null_resource provisioner (no internet access in private subnet)
+# pull binary from S3 via VPC gateway endpoint (no internet needed)
+aws s3 cp s3://fake-service-203932541249/fake-service /usr/bin/fake_service --region eu-central-1
+sudo chmod 755 /usr/bin/fake_service
 
 sudo cat > /usr/lib/systemd/system/account.service << EOF
 [Unit]

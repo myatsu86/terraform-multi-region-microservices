@@ -1,17 +1,66 @@
-resource "aws_instance" "this" {
-  ami                         = var.ami
-  region                      = var.region
-  instance_type               = var.instance_type
-  subnet_id                   = var.subnet_id
-  associate_public_ip_address = var.associate_public_ip_address
-  vpc_security_group_ids      = [aws_security_group.this.id]
-  user_data                   = var.user_data
-  key_name                    = var.key_name
+# resource "aws_instance" "this" {
+#   ami                         = var.ami
+#   region                      = var.region
+#   instance_type               = var.instance_type
+#   subnet_id                   = var.subnet_id
+#   associate_public_ip_address = var.associate_public_ip_address
+#   vpc_security_group_ids      = [aws_security_group.this.id]
+#   user_data                   = var.user_data
+#   key_name                    = var.key_name
 
-  tags = {
-    Name = var.name
+#   tags = {
+#     Name = var.name
+#   }
+# }
+
+resource "aws_launch_template" "this" {
+  region        = var.region
+  name_prefix   = "${var.name}-lt-"
+  image_id      = var.ami
+  instance_type = var.instance_type
+  key_name      = var.key_name
+
+  iam_instance_profile {
+    arn = var.iam_instance_profile_arn
+  }
+
+  network_interfaces {
+    associate_public_ip_address = var.associate_public_ip_address
+    security_groups             = [aws_security_group.this.id]
+  }
+
+  user_data = base64encode(var.user_data)
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name = var.name
+    }
   }
 }
+
+resource "aws_autoscaling_group" "this" {
+  region              = var.region
+  name                = "${var.name}-asg"
+  min_size            = var.min_size
+  max_size            = var.max_size
+  desired_capacity    = var.desired_capacity
+  vpc_zone_identifier = var.subnet_ids
+  target_group_arns   = var.target_group_arns
+  health_check_type   = "ELB" // ensures instances are only marked healthy when the ALB can route to them
+
+  launch_template {
+    id      = aws_launch_template.this.id
+    version = "$Latest"
+  }
+
+  tag {
+    key                 = "Name"
+    value               = var.name
+    propagate_at_launch = true
+  }
+}
+
 
 resource "aws_security_group" "this" {
   name        = "${var.name}-sg"
@@ -22,6 +71,13 @@ resource "aws_security_group" "this" {
   ingress {
     from_port   = var.service_port
     to_port     = var.service_port
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
