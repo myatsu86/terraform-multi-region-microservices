@@ -59,7 +59,4 @@ variable "target_group_arns" {
   default = []
 }
 
-variable "iam_instance_profile_arn" {
-  type = string
-}
 

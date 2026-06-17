@@ -1,11 +1,12 @@
 variable "VPCs" {
   type = list(object({
-    name              = string
-    vpc_cidr          = string
-    subnet_cidr       = list(string)
-    availability_zone = list(string)
-    enable_igw        = bool
-    region            = string
+    name               = string
+    vpc_cidr           = string
+    subnet_cidr        = list(string)
+    availability_zone  = list(string)
+    enable_igw         = bool
+    enable_nat_gateway = bool
+    region             = string
   }))
 }
 

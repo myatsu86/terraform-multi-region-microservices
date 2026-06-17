@@ -8,10 +8,9 @@ UPSTREAM_PORT="80"
 
 sudo apt update -y
 sudo apt-get install net-tools zip curl jq tree unzip wget siege apt-transport-https ca-certificates software-properties-common gnupg lsb-release -y
+
 sudo curl -LO https://github.com/nicholasjackson/fake-service/releases/download/v0.26.2/fake_service_linux_amd64.zip
 sudo unzip fake_service_linux_amd64.zip
-
-aws s3 cp fake-service s3://fake-service-203932541249/fake-service --region eu-central-1
 
 sudo rm -rf fake_service_linux_amd64.zip
 sudo mv fake-service /usr/bin/fake_service

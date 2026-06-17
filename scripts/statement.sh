@@ -4,14 +4,16 @@ set -x
 
 echo "Starting statement service setup"
 
+sudo apt update -y
+sudo apt-get install net-tools zip curl jq tree unzip wget siege apt-transport-https ca-certificates software-properties-common gnupg lsb-release -y
 
-# No apt install here: this subnet has no internet route, apt would stall cloud-init.
-# Binary is deployed via Terraform null_resource provisioner (no internet access in private subnet)
+sudo curl -LO https://github.com/nicholasjackson/fake-service/releases/download/v0.26.2/fake_service_linux_amd64.zip
+sudo unzip fake_service_linux_amd64.zip
 
-# pull binary from S3 via VPC gateway endpoint (no internet needed)
-aws s3 cp s3://fake-service-203932541249/fake-service /usr/bin/fake_service --region eu-central-1
+sudo rm -rf fake_service_linux_amd64.zip
+sudo mv fake-service /usr/bin/fake_service
 sudo chmod 755 /usr/bin/fake_service
-
+sudo chown ubuntu:ubuntu /usr/bin/fake_service
 
 sudo cat > /usr/lib/systemd/system/statement.service << 'EOF'
 [Unit]
