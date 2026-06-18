@@ -29,4 +29,9 @@ VPCs = [{
 
 associate_public_ip_address = true
 
+hosted_zone        = "myatsumon.info"
+private_zone       = false
+scaling_target_cpu = 50
+account_dns        = "account.myatsumon.info"
+statement_dns      = "statement.myatsumon.info"
 

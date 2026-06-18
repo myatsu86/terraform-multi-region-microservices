@@ -41,17 +41,17 @@ variable "region" {
 
 variable "min_size" {
   type    = number
-  default = 3
+  default = 2
 }
 
 variable "max_size" {
   type    = number
-  default = 5
+  default = 3
 }
 
 variable "desired_capacity" {
   type    = number
-  default = 3
+  default = 2
 }
 
 variable "target_group_arns" {
@@ -59,4 +59,7 @@ variable "target_group_arns" {
   default = []
 }
 
-
+variable "scaling_target_cpu" {
+  type    = number
+  default = 50
+}

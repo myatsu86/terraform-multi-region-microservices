@@ -22,3 +22,23 @@ locals {
   # distinct set of regions in use (AMIs and key pairs are per-region)
   regions = toset([for vpc in var.VPCs : vpc.region])
 }
+
+variable "hosted_zone" {
+  type = string
+}
+
+variable "private_zone" {
+  type = bool
+}
+
+variable "scaling_target_cpu" {
+  type = number
+}
+
+variable "account_dns" {
+  type = string
+}
+
+variable "statement_dns" {
+  type = string
+}

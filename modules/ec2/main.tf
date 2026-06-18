@@ -1,18 +1,3 @@
-# resource "aws_instance" "this" {
-#   ami                         = var.ami
-#   region                      = var.region
-#   instance_type               = var.instance_type
-#   subnet_id                   = var.subnet_id
-#   associate_public_ip_address = var.associate_public_ip_address
-#   vpc_security_group_ids      = [aws_security_group.this.id]
-#   user_data                   = var.user_data
-#   key_name                    = var.key_name
-
-#   tags = {
-#     Name = var.name
-#   }
-# }
-
 resource "aws_launch_template" "this" {
   region        = var.region
   name_prefix   = "${var.name}-lt-"
@@ -57,6 +42,19 @@ resource "aws_autoscaling_group" "this" {
   }
 }
 
+resource "aws_autoscaling_policy" "target_tracking" {
+  name                   = "${var.name}-cpu-tracking"
+  autoscaling_group_name = aws_autoscaling_group.this.name
+  policy_type            = "TargetTrackingScaling"
+  region                 = var.region
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+    target_value = var.scaling_target_cpu
+  }
+}
 
 resource "aws_security_group" "this" {
   name        = "${var.name}-sg"
@@ -74,6 +72,13 @@ resource "aws_security_group" "this" {
   ingress {
     from_port   = 80
     to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

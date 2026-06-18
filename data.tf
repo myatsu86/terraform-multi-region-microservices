@@ -16,3 +16,15 @@ data "aws_ami" "ubuntu" {
     values = ["hvm"]
   }
 }
+
+data "aws_route53_zone" "this" {
+  name         = var.hosted_zone
+  private_zone = var.private_zone
+}
+
+data "aws_acm_certificate" "this" {
+  for_each = local.regions
+  region   = each.value
+  domain   = "*.${var.hosted_zone}"
+  statuses = ["ISSUED"]
+}

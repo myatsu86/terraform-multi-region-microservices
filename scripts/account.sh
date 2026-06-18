@@ -4,7 +4,8 @@ set -x
 
 echo "Starting account service setup"
 
-UPSTREAM_PORT="80"
+UPSTREAM_PORT="443"
+
 
 sudo apt update -y
 sudo apt-get install net-tools zip curl jq tree unzip wget siege apt-transport-https ca-certificates software-properties-common gnupg lsb-release -y
@@ -27,7 +28,7 @@ Wants=network-online.target
 Type=simple
 
 Environment="LISTEN_ADDR=0.0.0.0:9092"
-Environment="UPSTREAM_URIS=http://${upstream_ip}:$${UPSTREAM_PORT}"
+Environment="UPSTREAM_URIS=https://${upstream_uri}"
 Environment="NAME=account-svc"
 Environment="MESSAGE=HelloCloudBank | Retail Banking | account-svc"
 
