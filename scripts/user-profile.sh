@@ -17,7 +17,6 @@ sudo mv fake-service /usr/bin/fake_service
 sudo chmod 755 /usr/bin/fake_service
 sudo chown ubuntu:ubuntu /usr/bin/fake_service
 
-
 sudo cat > /usr/lib/systemd/system/customer-profile.service << EOF
 [Unit]
 Description=Customer Profile Service
